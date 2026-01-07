@@ -1,0 +1,3 @@
+segment-anything-py
+opencv-python
+torch
