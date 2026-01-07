@@ -24,13 +24,21 @@ def progress(block_num, block_size, total_size):
 
 
 def download_sam_vit_b(checkpoint_path="sam_vit_b_01ec64.pth"):
-    if not os.path.exists(checkpoint_path):
-        print("Downloading SAM ViT-B checkpoint...")
-        url = "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
-        urllib.request.urlretrieve(url, checkpoint_path,reporthook=progress)
-        print("Download complete.")
-    else:
-        print("SAM ViT-B checkpoint already exists.")
+    url = "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
+
+    if os.path.exists(checkpoint_path):
+        size_mb = os.path.getsize(checkpoint_path) / 1e6
+        if size_mb < 100:   # way too small to be real
+            print("Checkpoint corrupted. Re-downloading...")
+            os.remove(checkpoint_path)
+        else:
+            print("SAM ViT-B checkpoint already exists.")
+            return
+
+    print("Downloading SAM ViT-B checkpoint...")
+    urllib.request.urlretrieve(url, checkpoint_path, reporthook=progress)
+    print("\nDownload complete.")
+
 
 
 
